@@ -99,7 +99,10 @@ uploadButton.click(function(){
     		if (this.readyState == 4 && this.status == 200) {
       			// console.log(this.responseText);
       			var user=JSON.parse(this.responseText);
-      			var array=localStorage.getItem('images').split(',');
+      			var array=localStorage.getItem('images');
+      			if(array.length>0){
+      				array=array.split(',');
+      			}
       			array.push(user.images[user.images.length-1]);
       			localStorage.setItem('images',array);
       			var template = jQuery('#image_template').html();

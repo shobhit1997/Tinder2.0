@@ -2,6 +2,7 @@ const mongoose=require('mongoose');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
+const config=require('../../server/config/config');
 var Schema=mongoose.Schema;
 
 var UserSchema = new Schema({

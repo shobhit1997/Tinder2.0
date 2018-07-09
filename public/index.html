@@ -5,6 +5,9 @@
 	<title>Login | Tinder2.0</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 </head>
 <body class="centered-form">
 
@@ -15,20 +18,20 @@
 		</div>
 		<div class="form-field">
 			<label>Phone No.</label>
-			<input type="number" name="phone" autofocus/>
+			<input type="tel" name="phone" autofocus required pattern="[0-9]{10}" />
 		</div>
 		<div class="form-field">
 			<label>Password</label>
-			<input type="password" name="password" />
+			<input type="password" name="password" required />
 		</div>
 		<div class="form-field">
 			<button>Login</button>
 		</div>
-		<div class="form-field">
+		<div class="form-field" style="text-align: center;">
 			<p>Don't have a account?</p>
 			<br>
-			<a href="/signup.html" style="text-align: center;">Sign In</a>
-		</p>
+			<a href="/signup.html" style="text-align: center;">Sign Up</a>
+			</p>
 		</div>
 		</form>
 	</div>

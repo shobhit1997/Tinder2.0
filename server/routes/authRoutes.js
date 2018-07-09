@@ -36,6 +36,8 @@ router.route('/logout')
 			res.status(200).send();
 		},function(){
 			res.status(400).send();
+		}).catch(function(err){
+			res.status(400).send();
 		});
 	});
 

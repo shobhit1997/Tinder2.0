@@ -1,6 +1,6 @@
 const app=require('./app');
 const http=require('http');
-const port=process.env.PORT||8000;
+
 var server=http.createServer(app);
 const socketIO=require('socket.io');
 const {Users} = require('./utils/users');
@@ -8,6 +8,7 @@ const mongoose = require('./db/connectDB');
 const User= require('../app/models/user');
 const moment=require('moment');
 const config=require('./config/config');
+const port=process.env.PORT;
 var io=socketIO(server);
 var users=new Users();
 io.on('connection',function(socket){
@@ -38,13 +39,17 @@ socket.on('join',function(params,callback){
 			    arrayUsers.push(oppositeGenderUsers[random1]);
 			    arrayUsers.push(oppositeGenderUsers[random2]);
 				socket.emit('showPhotos',arrayUsers);
+			}).catch(function(err){
+				console.log(err);
 			});
 
 		}
 		else{
 
 		}
-	});
+	}).catch(function(err){
+				console.log(err);
+			});
 	callback();
 });
 socket.on('liked_disliked',function(message,callback){
@@ -69,6 +74,10 @@ socket.on('liked_disliked',function(message,callback){
 			    arrayUsers.push(users[random1]);
 			    arrayUsers.push(users[random2]);
 				socket.emit('showPhotos',arrayUsers);
+			}).catch(function(err){
+				console.log(err);
+			}).catch(function(err){
+				console.log(err);
 			});
 
 			});
