@@ -179,6 +179,15 @@ router.route('/image/:id')
 		 imageStreams.getImage(gfs,req.params.id,res);
 	});
 
+router.route('/logout')
+	.delete(authenticate,function(req,res){
+		req.user.removeToken(req.token).then(function(){
+			res.status(200).send();
+		},function(){
+			res.status(400).send();
+		});
+	});
+
 
 app.use('/api',router);
 server.listen(port,function(){

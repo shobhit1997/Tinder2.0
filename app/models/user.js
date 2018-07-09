@@ -66,6 +66,15 @@ UserSchema.methods.toJSON=function(){
 	return _.pick(userObject,['_id','name','phone','gender','lastSeen','status','images','profilePhoto']);	
 };
 
+UserSchema.methods.removeToken=function(token){
+	var user=this;
+	return user.update({
+		$pull: {
+			tokens:{token}
+		}
+	});
+};
+
 UserSchema.statics.findByCredentials=function(phone,password){
 var User=this;
 return User.findOne({phone}).then(function(user){

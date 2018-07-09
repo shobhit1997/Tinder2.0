@@ -72,8 +72,20 @@ function emitLikeRequest(liked,disliked){
 
 var logoutButton=$('#logout');
 logoutButton.click(function(){
-	localStorage.clear();
-	window.location.href='/'
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+    		if (this.readyState == 4 && this.status == 200) {
+    			localStorage.clear();
+				window.location.href='/';  				
+    		}
+    		else if(this.status==400){
+    			alert('Try again');
+    		}
+	  		};
+	  		xhttp.open("DELETE", "http://localhost:8000/api/logout", true);
+	  		xhttp.setRequestHeader("x-auth", localStorage.getItem('x-auth'));
+	  		xhttp.send();	
+	
 });
 
 var uploadButton=$('#upload');
