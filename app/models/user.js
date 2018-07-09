@@ -53,7 +53,7 @@ var UserSchema = new Schema({
 UserSchema.methods.generateAuthToken=function(){
 	var user=this;
 	var access='auth';
-	var token = jwt.sign({_id:user._id.toHexString(),access},'abcd').toString();
+	var token = jwt.sign({_id:user._id.toHexString(),access},process.env.JWT_SECRET).toString();
 	user.tokens.push({access,token});
 	return user.save().then(function(){
 		return token;
@@ -106,6 +106,29 @@ return User.find({gender, _id: { $nin: liked_disliked }}).then(function(users){
 });
 };
 
+UserSchema.statics.findByToken = function(token){
+	var User =this;
+	var decoded;
+
+	try{
+
+		decoded= jwt.verify(token,process.env.JWT_SECRET);
+
+	}catch(e){
+
+		return new Promise(function(resolve,reject){
+			reject();
+		});
+
+	}
+	return User.findOne({
+		_id : decoded._id,
+		'tokens.token' : token,
+		'tokens.access' : 'auth'
+	});
+};
+
+
 UserSchema.pre('save',function(next){
 var user = this;
 if(user.isModified('password'))
@@ -124,27 +147,6 @@ else
 });
 
 
-UserSchema.statics.findByToken = function(token){
-	var User =this;
-	var decoded;
-
-	try{
-
-		decoded= jwt.verify(token,'abcd');
-
-	}catch(e){
-
-		return new Promise(function(resolve,reject){
-			reject();
-		});
-
-	}
-	return User.findOne({
-		_id : decoded._id,
-		'tokens.token' : token,
-		'tokens.access' : 'auth'
-	});
-};
 
 module.exports=mongoose.model('User',UserSchema);
 

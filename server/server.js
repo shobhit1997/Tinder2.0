@@ -7,7 +7,7 @@ const {Users} = require('./utils/users');
 const mongoose = require('./db/connectDB');
 const User= require('../app/models/user');
 const moment=require('moment');
-
+const config=require('./config/config');
 var io=socketIO(server);
 var users=new Users();
 io.on('connection',function(socket){
