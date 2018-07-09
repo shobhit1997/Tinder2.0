@@ -1,3 +1,3 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/Tinder2');
+mongoose.connect(process.env.MONGODB_URI);
 module.exports=mongoose;
