@@ -1,56 +1,15 @@
-const path= require('path');
-const express=require('express');
-const publicPath = path.join(__dirname,'../public');
-const app=express();
-const socketIO=require('socket.io');
+const app=require('./app');
 const http=require('http');
 const port=process.env.PORT||8000;
-const {Users} = require('./utils/users');
-const mongoose = require('mongoose');
-const _ = require('lodash');
-const bodyParser = require('body-parser');
-const User= require('../app/models/user');
-const request = require('request');
-const moment=require('moment');
-const imageStreams=require('./imageStreams');
-const  Grid = require('gridfs-stream');
-const multiparty = require('connect-multiparty')();
-
-
-mongoose.connect('mongodb://localhost:27017/Tinder2');
-const mongodb = mongoose.connection;
-app.use(bodyParser.urlencoded({extended : true}));
-app.use(bodyParser.json());
-
-
-app.use(function(req,res,next){
-	res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Expose-Headers', 'x-auth');
-    res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With,content-type, Accept , x-auth');
-  
-	next();
-});
-
-var authenticate = function(req,res,next){
-	var token = req.header('x-auth');
-	User.findByToken(token).then(function(user){
-		if(!user){
-			return Promise.reject();	
-		}
-		req.user=user;
-		req.token=token;
-		next();
-	}).catch(function(e){
-		res.status(401).send();
-	});
-
-};
-
 var server=http.createServer(app);
-app.use(express.static(publicPath));
+const socketIO=require('socket.io');
+const {Users} = require('./utils/users');
+const mongoose = require('./db/connectDB');
+const User= require('../app/models/user');
+const moment=require('moment');
+
 var io=socketIO(server);
 var users=new Users();
-
 io.on('connection',function(socket){
 console.log("new user connected");
 
@@ -86,9 +45,6 @@ socket.on('join',function(params,callback){
 
 		}
 	});
-
-
-
 	callback();
 });
 socket.on('liked_disliked',function(message,callback){
@@ -143,54 +99,9 @@ socket.on('disconnect',function(){
 });
 
 
-var router = express.Router();
 
-router.route('/signup')
-	.post(multiparty,function(req,res){
-		console.log(req.files);
-		console.log(req.body);
-		var gfs = Grid(mongodb.db, mongoose.mongo);
-		imageStreams.uploadImage(gfs,req,res);
-		
-	});
-
-router.route('/login')
-	.post(function(req,res){
-		var body=_.pick(req.body,['phone','password']);
-		User.findByCredentials(body.phone,body.password).then(function(user){
-			return user.generateAuthToken().then(function(token){
-				res.header('x-auth',token).send(user);
-			});
-		}).catch(function(e){
-			res.status(400).send(e);
-		});
-
-	});
-router.route('/image/:id')
-	.post(authenticate,multiparty,function(req,res){
-		console.log(req.files);
-		 var gfs = Grid(mongodb.db, mongoose.mongo);
-		 imageStreams.uploadImage(gfs,req,res);
-	});
-
-router.route('/image/:id')
-	.get(function(req,res){
-		 var gfs = Grid(mongodb.db, mongoose.mongo);
-		 imageStreams.getImage(gfs,req.params.id,res);
-	});
-
-router.route('/logout')
-	.delete(authenticate,function(req,res){
-		req.user.removeToken(req.token).then(function(){
-			res.status(200).send();
-		},function(){
-			res.status(400).send();
-		});
-	});
-
-
-app.use('/api',router);
 server.listen(port,function(){
 	console.log("Server running at port "+port);
 });
+
 
