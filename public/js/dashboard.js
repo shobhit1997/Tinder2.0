@@ -17,7 +17,7 @@ function renderUser(user,id2){
 var template = jQuery('#card_template').html();
 		var html = Mustache.render(template,{
 		 	name : user.name,
-		 	img_src : "http://localhost:8000/api/image/"+user.profilePhoto,
+		 	img_src : "https://calm-ridge-18636.herokuapp.com/api/image/"+user.profilePhoto,
 		 	img_id : user._id,
 		 	like_id : 'like_'+user._id,
 		 	dislike_id : 'dislike_'+user._id
@@ -45,7 +45,7 @@ var template = jQuery('#card_template').html();
 			user.images.map(data=>{
 				var template = jQuery('#image_template').html();
 				var html = Mustache.render(template,{
-	 			img_src : "http://localhost:8000/api/image/"+data,
+	 			img_src : "https://calm-ridge-18636.herokuapp.com/api/image/"+data,
 	 			img_id : data
 	 		});
 	 		jQuery('#photos').append(html);
@@ -54,8 +54,7 @@ var template = jQuery('#card_template').html();
 		 $('#like_'+user._id).click(function(){
 			emitLikeRequest(id1,id2);});
 		$('#dislike_'+user._id).click(function(){
-			emitLikeRequest(id2,id1)});
-}
+			emitLikeRequest(id2,id1)});}
 socket.on('showPhotos',function(arrayUsers){
 	console.log(arrayUsers);
 	jQuery('#users').html('');
@@ -82,7 +81,7 @@ logoutButton.click(function(){
     			alert('Try again');
     		}
 	  		};
-	  		xhttp.open("DELETE", "http://localhost:8000/api/logout", true);
+	  		xhttp.open("DELETE", "https://calm-ridge-18636.herokuapp.com/api/logout", true);
 	  		xhttp.setRequestHeader("x-auth", localStorage.getItem('x-auth'));
 	  		xhttp.send();	
 	
@@ -107,7 +106,7 @@ uploadButton.click(function(){
       			localStorage.setItem('images',array);
       			var template = jQuery('#image_template').html();
 				var html = Mustache.render(template,{
-	 			img_src : "http://localhost:8000/api/image/"+user.images[user.images.length-1],
+	 			img_src : "https://calm-ridge-18636.herokuapp.com/api/image/"+user.images[user.images.length-1],
 	 			img_id : user.images[user.images.length-1]
 	 		});
 	 		jQuery('#images').append(html);
@@ -117,7 +116,7 @@ uploadButton.click(function(){
      			
     		}
 	  		};
-	  		xhttp.open("POST", "http://localhost:8000/api/image/"+localStorage.getItem('_id'), true);
+	  		xhttp.open("POST", "https://calm-ridge-18636.herokuapp.com/api/image/"+localStorage.getItem('_id'), true);
 	  		xhttp.setRequestHeader("x-auth", localStorage.getItem('x-auth'));
 	  		var formData=new FormData();
 	  		formData.append('image',document.getElementById('photo').files[0]);
@@ -138,7 +137,7 @@ uploadButton.click(function(){
 $( document ).ready(function() {
 document.getElementById('user_name').innerHTML=localStorage.getItem('name');
     if(localStorage.getItem('profile_photo')){
-    	document.getElementById('profile_photo').src="http://localhost:8000/api/image/"+localStorage.getItem('profile_photo');
+    	document.getElementById('profile_photo').src="https://calm-ridge-18636.herokuapp.com/api/image/"+localStorage.getItem('profile_photo');
 
     }
     if(localStorage.getItem('images').length>0)
@@ -148,7 +147,7 @@ document.getElementById('user_name').innerHTML=localStorage.getItem('name');
     	
 			var template = jQuery('#image_template').html();
 			var html = Mustache.render(template,{
-	 			img_src : "http://localhost:8000/api/image/"+data,
+	 			img_src : "https://calm-ridge-18636.herokuapp.com/api/image/"+data,
 	 			img_id : data
 	 		});
 	 		jQuery('#images').append(html);
