@@ -6,14 +6,34 @@ const multiparty = require('connect-multiparty')();
 const authenticate=require('.././middleware/authenticate');
 const _ = require('lodash');
 const mongoose = require('.././db/connectDB');
+const imageSchema=require('.././validationSchemas/imageSchema');
+const signUpSchema=require('.././validationSchemas/signUpSchema');
+const Joi=require('joi');
 const router=express.Router();
 const mongodb = mongoose.connection;
 router.route('/signup')
 	.post(multiparty,function(req,res){
 		console.log(req.files);
 		console.log(req.body);
-		var gfs = Grid(mongodb.db, mongoose.mongo);
-		imageStreams.uploadImage(gfs,req,res);
+		Joi.validate(req.body, signUpSchema, function (err, value) {
+			if(err===null){
+				Joi.validate(req.files, imageSchema, function (err, value) {
+					if(err===null){
+						var gfs = Grid(mongodb.db, mongoose.mongo);
+						imageStreams.uploadImage(gfs,req,res);				
+					}
+					else{
+						res.status(400).send(err);
+					} 
+				});		
+			}
+
+			else{
+				res.status(400).send(err);
+			} 
+		});
+
+		
 		
 	});
 
