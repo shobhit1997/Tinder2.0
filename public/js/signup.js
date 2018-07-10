@@ -16,7 +16,7 @@ e.preventDefault();
       window.location.href='/dashboard.html';
     }
   };
-  xhttp.open("POST", "https://calm-ridge-18636.herokuapp.com/api/signup", true);
+  xhttp.open("POST", window.location.origin+"/api/signup", true);
   // xhttp.setRequestHeader("Content-type", "multipart/form-data");
   var formData=new FormData();
   formData.append('name',jQuery("[name='name']").val());

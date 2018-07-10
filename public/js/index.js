@@ -16,7 +16,7 @@ e.preventDefault();
       window.location.href='/dashboard.html';
     }
   };
-  xhttp.open("POST", "https://calm-ridge-18636.herokuapp.com/api/login", true);
+  xhttp.open("POST", window.location.origin+"/api/login", true);
   xhttp.setRequestHeader("Content-type", "application/json");
   var jsonObj={
   	phone : jQuery("[name='phone']").val(),

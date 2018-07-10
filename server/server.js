@@ -43,6 +43,9 @@ socket.on('join',function(params,callback){
 			    arrayUsers.push(oppositeGenderUsers[random2]);
 				socket.emit('showPhotos',arrayUsers);
 			}
+			else{
+				socket.emit('showPhotos',oppositeGenderUsers);	
+			}
 			}).catch(function(err){
 				console.log(err);
 			});
@@ -67,17 +70,22 @@ socket.on('liked_disliked',function(message,callback){
 				console.log(user);
 				User.findByGender(user.gender==='Male'?'Female':'Male',user.likes.concat(user.dislikes)).then(function(users){
 				console.log(users);
-				var min=0;
-			    var max=users.length; 
-			    var random1 =Math.floor(Math.random() * (+max - +min)) + +min;
-			    var random2 =Math.floor(Math.random() * (+max - +min)) + +min;
-			    while(random1===random2){
-			    	random2 =Math.floor(Math.random() * (+max - +min)) + +min;
-			    }
-			    var arrayUsers= new Array();
-			    arrayUsers.push(users[random1]);
-			    arrayUsers.push(users[random2]);
-				socket.emit('showPhotos',arrayUsers);
+				if(users.length>=2){
+					var min=0;
+				    var max=users.length; 
+				    var random1 =Math.floor(Math.random() * (+max - +min)) + +min;
+				    var random2 =Math.floor(Math.random() * (+max - +min)) + +min;
+				    while(random1===random2){
+				    	random2 =Math.floor(Math.random() * (+max - +min)) + +min;
+				    }
+				    var arrayUsers= new Array();
+				    arrayUsers.push(users[random1]);
+				    arrayUsers.push(users[random2]);
+					socket.emit('showPhotos',arrayUsers);
+				}
+				else{
+					socket.emit('showPhotos',new Array());	
+				}
 			}).catch(function(err){
 				console.log(err);
 			}).catch(function(err){

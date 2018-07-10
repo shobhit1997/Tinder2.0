@@ -4,7 +4,7 @@ const  Grid = require('gridfs-stream');
 const multiparty = require('connect-multiparty')();
 const authenticate=require('.././middleware/authenticate');
 const router=require('./authRoutes');
-const mongoose = require('../db/connectDB');
+const mongoose = require('mongoose');
 const mongodb = mongoose.connection;
 
 router.route('/image/:id')
