@@ -26,6 +26,9 @@ socket.on('join',function(params,callback){
 			user.save().then(function(user){
 			});
 			User.findByGender(user.gender==='Male'?'Female':'Male',user.likes.concat(user.dislikes)).then(function(users){
+				if(users.length>=2){
+
+
 				console.log(users);
 				oppositeGenderUsers=users;
 				var min=0;
@@ -39,6 +42,7 @@ socket.on('join',function(params,callback){
 			    arrayUsers.push(oppositeGenderUsers[random1]);
 			    arrayUsers.push(oppositeGenderUsers[random2]);
 				socket.emit('showPhotos',arrayUsers);
+			}
 			}).catch(function(err){
 				console.log(err);
 			});
