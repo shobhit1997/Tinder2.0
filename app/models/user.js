@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const config=require('../../server/config/config');
+const moment=require('moment');
 var Schema=mongoose.Schema;
 
 var UserSchema = new Schema({
@@ -22,7 +23,8 @@ var UserSchema = new Schema({
 	password: {
 		type : String,
 		required: true,
-		minlength : 6
+		minlength : 6,
+		select : false
 	},
 	lastSeen: {
 		type: Number
@@ -71,13 +73,15 @@ UserSchema.methods.removeToken=function(token){
 	return user.update({
 		$pull: {
 			tokens:{token}
-		}
+		},
+		lastSeen:moment().valueOf(),
+		status:'ofline'
 	});
 };
 
 UserSchema.statics.findByCredentials=function(phone,password){
 var User=this;
-return User.findOne({phone}).then(function(user){
+return User.findOne({phone}).select('+password').then(function(user){
 	if(!user){
 		return Promise.reject();
 	}
@@ -121,6 +125,7 @@ UserSchema.statics.findByToken = function(token){
 		});
 
 	}
+	// console.log(decoded);
 	return User.findOne({
 		_id : decoded._id,
 		'tokens.token' : token,

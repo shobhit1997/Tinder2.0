@@ -27,9 +27,6 @@ socket.on('join',function(params,callback){
 			});
 			User.findByGender(user.gender==='Male'?'Female':'Male',user.likes.concat(user.dislikes)).then(function(users){
 				if(users.length>=2){
-
-
-				console.log(users);
 				oppositeGenderUsers=users;
 				var min=0;
 			    var max=oppositeGenderUsers.length; 
@@ -67,9 +64,7 @@ socket.on('liked_disliked',function(message,callback){
 			user.likes.push(message.liked);
 			user.dislikes.push(message.disliked);
 			user.save().then(function(user){
-				console.log(user);
 				User.findByGender(user.gender==='Male'?'Female':'Male',user.likes.concat(user.dislikes)).then(function(users){
-				console.log(users);
 				if(users.length>=2){
 					var min=0;
 				    var max=users.length; 
@@ -106,11 +101,13 @@ socket.on('disconnect',function(){
 	var user=users.removeUser(socket.id);
 	if(user){
 		User.findByToken(user.token).then(function(user){
-			user.lastSeen=moment().valueOf();
-			user.status='offline';
-			user.save().then(function(user){
-				console.log(user);
-			});
+			if(user){
+				user.lastSeen=moment().valueOf();
+				user.status='offline';
+				user.save().then(function(user){
+					console.log(user);
+				});
+			}
 		}).catch(function(err){
 			console.log(err);
 		});
